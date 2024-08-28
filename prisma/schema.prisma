@@ -11,14 +11,17 @@ datasource db {
 }
 
 model Measure {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   value       Float
   imageUrl    String
   uuid        String
   date        DateTime
   measureType String
+  customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  String
 }
 
 model Customer {
-  id Int @id @default(autoincrement())
+  id      String    @id @default(uuid())
+  Measure Measure[]
 }
