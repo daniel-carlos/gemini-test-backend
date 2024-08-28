@@ -7,7 +7,7 @@ interface Measure {
     measureType: MeasureType
 }
 
-enum MeasureType {
+export enum MeasureType {
     Water,
     Gas
 }

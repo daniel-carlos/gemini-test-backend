@@ -1,4 +1,5 @@
-import { IsDate, IsEnum, IsNumber, IsString, IsUrl, IsUUID } from "class-validator"
+import { IsDate, IsDateString, IsEnum, IsString, IsUrl } from "class-validator"
+import { MeasureType } from "src/types/mainTypes"
 
 export class UploadMeasureDTO {
     @IsUrl()
@@ -7,9 +8,9 @@ export class UploadMeasureDTO {
     @IsString()
     customerCode: string
 
-    @IsDate()
+    @IsDateString()
     date: Date
 
     @IsEnum(MeasureType)
-    measureType: MeasureType
+    measureType: string
 }
