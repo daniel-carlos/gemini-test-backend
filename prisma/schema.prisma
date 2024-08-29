@@ -23,5 +23,6 @@ model Measure {
 
 model Customer {
   id      String    @id @default(uuid())
+  name    String
   Measure Measure[]
 }
