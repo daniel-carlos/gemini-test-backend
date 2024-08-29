@@ -22,11 +22,11 @@ export class MeasureController {
 
     @Post("/upload")
     @UsePipes(new ValidationPipe())
-    @UseInterceptors(FileInterceptor('file', {
-        limits: { files: 1 }
-    }))
-    async upload(@Body() data: UploadMeasureDTO, @UploadedFile() file: Express.Multer.File) {
-        return await this.service.uploadMeasure(data, file);
+    // @UseInterceptors(FileInterceptor('image', {
+    //     limits: { files: 1 }
+    // }))
+    async upload(@Body() data: UploadMeasureDTO) {
+        return await this.service.uploadMeasure(data);
     }
 
     @Patch("/confirm")

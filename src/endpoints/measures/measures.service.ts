@@ -39,7 +39,7 @@ export class MeasureService {
         return this.prisma.measure.findMany();
     }
 
-    async uploadMeasure(data: UploadMeasureDTO, file: Express.Multer.File) {
+    async uploadMeasure(data: UploadMeasureDTO) {
         // this.gemini.getMeasure()
 
         //Buscar o cliente
@@ -62,13 +62,15 @@ export class MeasureService {
             })
 
             const folder = join(__dirname, '../../../uploads');
-            const filename = `${data.customerCode}-${newMeasure.id}.png`;
+            const filename = `${newMeasure.id}.png`;
             const path = join(__dirname, '../../../uploads', filename);
             if (!fs.existsSync(folder)) {
                 fs.mkdirSync(folder, { recursive: true });
             }
 
-            await writeFile(path, file.buffer);
+            const image = Buffer.from(data.image, 'base64');
+
+            await writeFile(path, image);
 
             return {
                 imageURL: filename,
