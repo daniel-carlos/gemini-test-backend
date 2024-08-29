@@ -5,6 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { MeasureModule } from './endpoints/measures/measures.module';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { CustomersModule } from './endpoints/measures/customers/customers.module';
 
 
 const StaticFilesModule = ServeStaticModule.forRoot({
@@ -13,7 +14,7 @@ const StaticFilesModule = ServeStaticModule.forRoot({
 })
 
 @Module({
-  imports: [PrismaModule, MeasureModule, StaticFilesModule],
+  imports: [PrismaModule, StaticFilesModule, MeasureModule, CustomersModule],
   controllers: [AppController],
   providers: [AppService],
 })
