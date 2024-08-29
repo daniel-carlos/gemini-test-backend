@@ -19,6 +19,7 @@ model Measure {
   measureType String
   customer    Customer @relation(fields: [customerId], references: [id])
   customerId  String
+  confirmed   Int      @default(0)
 }
 
 model Customer {
