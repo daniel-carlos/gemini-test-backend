@@ -11,15 +11,14 @@ datasource db {
 }
 
 model Measure {
-  id          String   @id @default(uuid())
-  value       Float
-  imageUrl    String
-  uuid        String
-  date        DateTime
-  measureType String
-  customer    Customer @relation(fields: [customerId], references: [id])
-  customerId  String
-  confirmed   Int      @default(0)
+  id           String   @id @default(uuid())
+  value        Float
+  month        Int
+  year         Int
+  measureType  String
+  customer     Customer @relation(fields: [customerCode], references: [id])
+  customerCode String   @map("customerCode")
+  confirmed    Int      @default(0)
 }
 
 model Customer {

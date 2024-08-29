@@ -1,16 +1,15 @@
 import { IsDate, IsDateString, IsEnum, IsString, IsUrl } from "class-validator"
 import { MeasureType } from "src/types/mainTypes"
+import { IsMonthYear } from "./isMonthYear"
 
 export class UploadMeasureDTO {
-    @IsUrl()
-    imageUrl: string
-
     @IsString()
     customerCode: string
 
-    @IsDateString()
-    date: Date
+    @IsMonthYear()
+    @IsString()
+    date: string
 
-    @IsEnum(MeasureType)
+    @IsString()
     measureType: string
 }

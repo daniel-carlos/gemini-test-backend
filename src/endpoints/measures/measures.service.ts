@@ -1,24 +1,81 @@
 import { Injectable } from "@nestjs/common";
-import { Measure } from "@prisma/client";
+import { Customer, Measure } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UploadMeasureDTO } from "./dto/uploadMeasure.dto";
 import { ConfirmMeasureDTO } from "./dto/confirmMeasure.dto";
+import { GeminiService } from "src/gemini/gemini.service";
+import { join } from "path";
+import * as fs from "fs";
+import { writeFile } from "fs/promises";
+import { format, parse } from "date-fns";
 
 @Injectable()
 export class MeasureService {
     constructor(
-        private readonly prisma: PrismaService
+        private readonly prisma: PrismaService,
+        private readonly gemini: GeminiService,
     ) { }
 
+    getCustomerMeasures(customerCode: any) {
+        return this.prisma.measure.findMany({
+            where: {
+                customerCode
+            }
+        })
+    }
+
     confirmMeasure(data: ConfirmMeasureDTO) {
-        throw new Error("Method not implemented.");
+        return this.prisma.measure.update({
+            where: {
+                id: data.measure_uuid
+            },
+            data: {
+                confirmed: 1
+            }
+        });
     }
 
     getAllMeasures() {
         return this.prisma.measure.findMany();
     }
 
-    uploadMeasure(data: UploadMeasureDTO) {
-        return data;
+    async uploadMeasure(data: UploadMeasureDTO, file: Express.Multer.File) {
+        // this.gemini.getMeasure()
+
+        //Buscar o cliente
+        const customer: Customer = await this.prisma.customer.findFirst({
+            where: { id: data.customerCode }
+        })
+
+        const parsedDate = parse(data.date, "MM-yyyy", new Date());
+
+        if (customer) {
+            // Registrar a medida no banco
+            const newMeasure = await this.prisma.measure.create({
+                data: {
+                    value: 0,
+                    customerCode: customer.id,
+                    month: parsedDate.getMonth() + 1,
+                    year: parsedDate.getFullYear(),
+                    measureType: data.measureType
+                }
+            })
+
+            const folder = join(__dirname, '../../../uploads');
+            const filename = `${data.customerCode}-${newMeasure.id}.png`;
+            const path = join(__dirname, '../../../uploads', filename);
+            if (!fs.existsSync(folder)) {
+                fs.mkdirSync(folder, { recursive: true });
+            }
+
+            await writeFile(path, file.buffer);
+
+            return {
+                imageURL: filename,
+                measureId: newMeasure.id,
+                measureValue: 0
+            };
+        }
+
     }
 }
