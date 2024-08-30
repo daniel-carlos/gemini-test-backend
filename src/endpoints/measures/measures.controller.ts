@@ -22,12 +22,13 @@ export class MeasureController {
 
     @Post("/upload")
     @UsePipes(new ValidationPipe())
-    // @UseInterceptors(FileInterceptor('image', {
-    //     limits: { files: 1 }
-    // }))
     async upload(@Body() data: UploadMeasureDTO) {
-        // async upload(@Req() data: RawBodyRequest<UploadMeasureDTO>) {
-        return await this.service.uploadMeasure(data);
+        const result = await this.service.uploadMeasure(data);
+        return {
+            image_url: result.imageURL,
+            measure_uuid: result.measureId,
+            measure_value: result.measureValue
+        };
     }
 
     @Patch("/confirm")
