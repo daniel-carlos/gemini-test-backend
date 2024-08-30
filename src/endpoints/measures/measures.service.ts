@@ -72,7 +72,7 @@ export class MeasureService {
 
             await writeFile(path, image);
 
-            const measure = await this.gemini.getMeasure(path)
+            const measure = await this.gemini.getMeasure(path, data.measureType)
             console.log("\nMeasure: ", measure, "\n");
 
             return {

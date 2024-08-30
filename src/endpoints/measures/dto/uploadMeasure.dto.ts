@@ -1,10 +1,9 @@
-import { IsBase64, IsString } from "class-validator"
+import { IsBase64, IsEnum, IsString } from "class-validator"
 import { MeasureType } from "src/types/mainTypes"
 import { IsMonthYear } from "./isMonthYear"
 
 export class UploadMeasureDTO {
     @IsString()
-    // @IsBase64()
     image: string
 
     @IsString()
@@ -15,5 +14,6 @@ export class UploadMeasureDTO {
     date: string
 
     @IsString()
-    measureType: string
+    @IsEnum(MeasureType)
+    measureType: MeasureType
 }

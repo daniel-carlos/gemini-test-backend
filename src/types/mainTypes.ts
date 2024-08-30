@@ -1,4 +1,4 @@
 export enum MeasureType {
-    Water,
-    Gas
+    WATER = "WATER",
+    GAS = "GAS"
 }
