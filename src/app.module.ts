@@ -6,6 +6,7 @@ import { MeasureModule } from './endpoints/measures/measures.module';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { CustomersModule } from './endpoints/customers/customers.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 
 const StaticFilesModule = ServeStaticModule.forRoot({
@@ -13,8 +14,14 @@ const StaticFilesModule = ServeStaticModule.forRoot({
   exclude: ['/api/(.*)'],
 })
 
+const MulterRegister = MulterModule.register({
+  limits: {
+    fileSize: 1024 * 1024 * 200, // 10 MB
+  },
+})
+
 @Module({
-  imports: [PrismaModule, StaticFilesModule, MeasureModule, CustomersModule],
+  imports: [PrismaModule, StaticFilesModule, MulterRegister, MeasureModule, CustomersModule],
   controllers: [AppController],
   providers: [AppService],
 })

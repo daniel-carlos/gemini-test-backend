@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, RawBodyRequest, Req, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from "@nestjs/common";
 import { MeasureService } from "./measures.service";
 import { UploadMeasureDTO } from "./dto/uploadMeasure.dto";
 import { ConfirmMeasureDTO } from "./dto/confirmMeasure.dto";
@@ -26,6 +26,7 @@ export class MeasureController {
     //     limits: { files: 1 }
     // }))
     async upload(@Body() data: UploadMeasureDTO) {
+        // async upload(@Req() data: RawBodyRequest<UploadMeasureDTO>) {
         return await this.service.uploadMeasure(data);
     }
 

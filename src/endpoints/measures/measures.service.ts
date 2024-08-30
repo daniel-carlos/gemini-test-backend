@@ -72,10 +72,13 @@ export class MeasureService {
 
             await writeFile(path, image);
 
+            const measure = await this.gemini.getMeasure(path)
+            console.log("\nMeasure: ", measure, "\n");
+
             return {
                 imageURL: filename,
                 measureId: newMeasure.id,
-                measureValue: 0
+                measureValue: measure
             };
         }
 
