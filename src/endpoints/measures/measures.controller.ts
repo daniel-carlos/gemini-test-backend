@@ -1,10 +1,11 @@
-import { Body, Controller, Get, HttpException, Param, ParseUUIDPipe, Patch, Post, RawBodyRequest, Req, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Param, ParseUUIDPipe, Patch, Post, RawBodyRequest, Req, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from "@nestjs/common";
 import { MeasureService } from "./measures.service";
 import { UploadMeasureDTO } from "./dto/uploadMeasure.dto";
 import { ConfirmMeasureDTO } from "./dto/confirmMeasure.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ValidateDataPipe } from "src/customPipes/ShopperValidationPipe";
 import { ErrorReturn } from "src/customPipes/ShopperErrorMessage";
+import { exitCode } from "process";
 
 @Controller("measures")
 export class MeasureController {
@@ -19,7 +20,22 @@ export class MeasureController {
 
     @Get("/:customerCode/list")
     async listCustomerMeasures(@Param('customerCode', ParseUUIDPipe) customerCode) {
-        return await this.service.getCustomerMeasures(customerCode);
+        const list = await this.service.getCustomerMeasures(customerCode);
+        if (list.length === 0) {
+            throw new HttpException(ErrorReturn("MEASURES_NOT_FOUND", "Nenhuma leitura encontrada"), 404);
+        }
+        return {
+            customer_code: customerCode,
+            measures: list.map(m => {
+                return {
+                    measure_uuid: m.id,
+                    measure_datetime: `${m.month}/${m.year}`,
+                    measure_type: m.measureType,
+                    has_confirmed: m.confirmed === 1,
+                    image_url: this.service.createMeasureImagePaths(customerCode, m.month, m.year)[0]
+                }
+            })
+        }
     }
 
     @Post("/upload")
