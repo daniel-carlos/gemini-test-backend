@@ -78,7 +78,7 @@ export class MeasureService {
     }
 
     createMeasureImagePaths = (customerId: string, month: number, year: number) => {
-        const folder = join(__dirname, `../../../uploads`);
+        const folder = join(__dirname, `../../../uploads/${customerId}`);
         const filename = `${customerId}/${year}-${month}.png`;
         const path = join(__dirname, `../../../uploads`, filename);
 
